@@ -26,6 +26,8 @@ section.hero{
     background: $secondary;
 }
 
+
+
 .size{
     background: $secondary;
 }
@@ -37,5 +39,33 @@ section.hero{
         background: $primary;
         border-color: $pure;
         color: $pure;
+    }
+}
+
+.btn-primary{
+    background: $primary;
+    transition: $smooth;
+    &:hover{
+        background: $primary-hover;
+    }
+}
+
+section.cart{
+    background: $secondary;
+    .amount{
+        color: $primary;
+    }
+}
+
+section.login{
+    background: $secondary;
+    min-height: calc(100vh - 86px);
+
+    a{
+        color: $primary;
+
+        &:hover{
+            color: $primary-hover;
+        }
     }
 }

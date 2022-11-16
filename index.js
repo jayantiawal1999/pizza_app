@@ -8,15 +8,33 @@ const path= require('path')
 //Assets
 app.use(express.static('public'))
 
-// const PORT= process.env.PORT || 8000
-app.get('/',(req,res)=>{
-    res.render('home')
-})
 
 //Set template engine
 app.use(expressLayout);
 app.set('view engine', 'ejs')
 app.set('views','./resources/views');
+
+
+// const PORT= process.env.PORT || 8000
+app.get('/',(req,res)=>{
+    res.render('home')
+})
+
+//Auth routes
+
+app.get('/login',(req,res)=>{
+    res.render('auth/login')
+})
+
+app.get('/register',(req,res)=>{
+    res.render('auth/register')
+})
+
+//Customers routes
+app.get('/cart',(req,res)=>{
+    res.render('customers/cart')
+})
+
 
 app.listen(port,(err)=>{
     if(err){ console.log(err); }
