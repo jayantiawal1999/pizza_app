@@ -4,6 +4,7 @@ const app= express();
 const ejs= require('ejs');
 const expressLayout= require('express-ejs-layouts')
 const path= require('path')
+ 
 
 //Assets
 app.use(express.static('public'))
@@ -16,25 +17,11 @@ app.set('views','./resources/views');
 
 
 // const PORT= process.env.PORT || 8000
-app.get('/',(req,res)=>{
-    res.render('home')
-})
+// app.get('/',(req,res)=>{
+//     res.render('home')
+// })
 
-//Auth routes
-
-app.get('/login',(req,res)=>{
-    res.render('auth/login')
-})
-
-app.get('/register',(req,res)=>{
-    res.render('auth/register')
-})
-
-//Customers routes
-app.get('/cart',(req,res)=>{
-    res.render('customers/cart')
-})
-
+require('./routes/web')(app)
 
 app.listen(port,(err)=>{
     if(err){ console.log(err); }
