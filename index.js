@@ -1,20 +1,62 @@
+require('dotenv').config();
 const express = require('express');
 const port= 8000;
+const bodyParser= require('body-parser')
 const app= express();
 const ejs= require('ejs');
 const expressLayout= require('express-ejs-layouts')
 const path= require('path')
 const mongoose= require('mongoose');
+const session = require('express-session')
+const MongoStore = require('connect-mongo')(session);
+const flash= require('express-flash')
 const connection= mongoose.connection;
+
+
+//flash middleware for cookie
+//connect-mongo id used to store the sessions in database
+app.use(flash())
+
 
 //Database connection code
 const url= 'mongodb://localhost/pizza';
 mongoose.connect(url);
 
+
  
 
 //Assets
 app.use(express.static('public'))
+app.use(express.urlencoded());
+app.use(bodyParser.urlencoded());
+app.use(express.json())
+
+
+
+//connect-mongo session store
+let mongoStore=new MongoStore({
+    mongooseConnection: connection,
+    collection: 'sessions'  //it will create db table name as session in db
+})
+
+
+
+//Session config is works as middelware
+app.use(session({
+    secret : process.env.COOKIE_SECRET,
+    resave: false,
+    store: mongoStore,
+    saveUninitialized: true,
+    cookie: {maxAge: 1000*60*60*24}// 24 hours
+    // cookie: {maxAge: 1000*15} 
+}))
+
+//Global middleware
+app.use((req, res, next)=>{
+    res.locals.session=req.session
+
+    next()
+})
 
 
 //Set template engine

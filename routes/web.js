@@ -12,6 +12,7 @@ function initRoutes(app){
 
     //Customers routes
     app.get('/cart',cartController().cart)
+    app.post('/update-cart',cartController().update)
 
 }
 
