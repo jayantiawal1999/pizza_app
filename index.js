@@ -32,11 +32,7 @@ app.use(express.urlencoded());
 app.use(bodyParser.urlencoded());
 app.use(express.json())
 
-//Passport config
-const passportInit= require('./app/config/passport')
-passportInit(passport)
-app.use(passport.initialize())
-app.use(passport.session())
+
 
 
 //connect-mongo session store
@@ -63,6 +59,12 @@ app.use((req, res, next)=>{
 
     next()
 })
+
+//Passport config
+const passportInit= require('./app/config/passport')
+passportInit(passport)
+app.use(passport.initialize())
+app.use(passport.session())
 
 
 //Set template engine
