@@ -53,18 +53,20 @@ app.use(session({
     // cookie: {maxAge: 1000*15} 
 }))
 
-//Global middleware
-app.use((req, res, next)=>{
-    res.locals.session=req.session
-
-    next()
-})
-
 //Passport config
 const passportInit= require('./app/config/passport')
 passportInit(passport)
 app.use(passport.initialize())
 app.use(passport.session())
+
+//Global middleware
+app.use((req, res, next)=>{
+    res.locals.session=req.session
+    res.locals.user= req.user
+    next()
+})
+
+
 
 
 //Set template engine
