@@ -36,3 +36,11 @@ addToCart.forEach((btn)=>{
         
     })
 })
+
+
+// Remove alert message after X seconds
+if(alertMsg){
+    setTimeout(()=>{
+        alertMsg.remove();
+    },2000)
+}
