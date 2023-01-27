@@ -37,7 +37,10 @@ function orderController(){
             const orders = await Order.find({customer:req.user._id},
                 null,
                 {sort: {'createdAt': -1}})
-            console.log(orders)
+            // this is implemented bcz when user once plcaed the order after that 
+            // if user clickd back button then its again showing the flash message
+            // to avaid that we adding below code
+            res.header('Cache-Control','no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0')
             res.render('customers/orders',{orders: orders, moment: moment})
         }
     }

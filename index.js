@@ -28,8 +28,8 @@ mongoose.connect(url);
 
 //Assets
 app.use(express.static('public'))
-app.use(express.urlencoded());
-app.use(bodyParser.urlencoded());
+app.use(express.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.json())
 
 

@@ -1,7 +1,23 @@
-function orderController(){
+const Order= require('../../../models/order')
+
+function orderController() {
     return {
-        index(req,res){
-            
+        async index(req, res) {
+           
+           await Order.find({ status: { $ne: 'completed' } }, null, { sort: { 'createdAt': -1 }}).populate('customer').exec((err,orders)=>{
+                if(req.xhr){
+                    return res.json(orders)
+                }
+                else{
+                    // console.log(orders)
+                    return res.render('admin/orders')
+                }
+           })
+           
+           
         }
     }
 }
+
+module.exports = orderController
+

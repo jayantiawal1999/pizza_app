@@ -6,7 +6,7 @@ function cartController(){
             res.render('customers/cart')
         },
 
-        update(req,res){
+        update(request,response){
             //Below is schema of storing the info in cart database
             // let cart ={
             //     items : {
@@ -18,8 +18,8 @@ function cartController(){
 
         
             //for the first time creating the cart and adding basic obj structure
-            if(!req.session.cart){
-                req.session.cart = {
+            if(!request.session.cart){
+                request.session.cart = {
                     items :{},
                     totalQty : 0,
                     totalPrice: 0
@@ -27,26 +27,26 @@ function cartController(){
               
             }
 
-            let cart= req.session.cart
+            let cart= request.session.cart
             
-            console.log(req.body)
+            console.log(request.body)
 
             
             //check if item does not exist in cart
-            if(!cart.items[req.body._id]){
-                cart.items[req.body._id]={
-                    item: req.body,
+            if(!cart.items[request.body._id]){
+                cart.items[request.body._id]={
+                    item: request.body,
                     qty: 1
                 }
                 cart.totalQty+=1
-                cart.totalPrice+=req.body.price
+                cart.totalPrice+=request.body.price
             }else{
-                cart.items[req.body._id].qty+=1
+                cart.items[request.body._id].qty+=1
                 cart.totalQty+=1
-                cart.totalPrice+=req.body.price
+                cart.totalPrice+=request.body.price
             }
             
-            return res.json({totalQty: req.session.cart.totalQty})
+            return response.json({totalQty: request.session.cart.totalQty})
         }
     }
 }
