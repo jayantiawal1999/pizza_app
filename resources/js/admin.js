@@ -6,8 +6,28 @@ function initAdmin(){
     let orders=[]
     let markup;
 
+    axios.get('admin/orders',{
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    }).then(res=>{
+        orders= res.data
+        markup= generateMarkup(orders)
+        orderTable.innerHTML = markup
+    }).catch(err=>{
+        console.log(err)
+    })
 
-    function generateMarkup(orders){
+    function renderItems(items) {
+        let parsedItems = Object.values(items)
+        return parsedItems.map((menuItem) => {
+            return `
+                <p>${ menuItem.item.name } - ${ menuItem.qty } pcs </p>
+            `
+        }).join('')
+      }
+
+      function generateMarkup(orders){
         return orders.map(order => {
             return `
                 <tr>
@@ -59,35 +79,6 @@ function initAdmin(){
         }).join('')
 
     }
-
-
-
-
-
-
-
-    axios.get('admin/orders',{
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    }).then(res=>{
-        orders= res.data
-        markup= generateMarkup(orders)
-        orderTable.innerHTML = markup
-    }).catch(err=>{
-        console.log(err)
-    })
-
-    function renderItems(items) {
-        let parsedItems = Object.values(items)
-        return parsedItems.map((menuItem) => {
-            return `
-                <p>${ menuItem.item.name } - ${ menuItem.qty } pcs </p>
-            `
-        }).join('')
-      }
-
-    
 }
 
 
