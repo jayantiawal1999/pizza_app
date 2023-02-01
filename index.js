@@ -12,6 +12,7 @@ const MongoStore = require('connect-mongo')(session);
 const flash= require('express-flash')
 const connection= mongoose.connection;
 const passport = require('passport')
+const Emitter= require('events');
 
 
 //flash middleware for cookie
@@ -53,6 +54,14 @@ app.use(session({
     // cookie: {maxAge: 1000*15} 
 }))
 
+// Event EMitter for socket.io code
+
+const eventEmitter= new Emitter()
+app.set('eventEmitter',eventEmitter)
+
+
+
+
 //Passport config
 const passportInit= require('./app/config/passport')
 passportInit(passport)
@@ -82,11 +91,6 @@ app.set('views','./resources/views');
 
 require('./routes/web')(app)
 
-app.listen(port,(err)=>{
-    if(err){ console.log(err); }
-
-    console.log("The server listening on port:",port);
-})
 
 //connecting to mongo
 
@@ -97,3 +101,34 @@ connection.once('open',()=>{
     console.log('MongoDB database connected...')
 })
 
+
+const server = app.listen(port,(err)=>{
+    if(err){ console.log(err); }
+
+    console.log("The server listening on port:",port);
+})
+
+
+// Socket IO Code
+const io= require('socket.io')(server);
+
+io.on('connection',(socket)=>{
+    // Join
+    // socket will give diff id for every connection
+    console.log(socket.id)
+    // will receive the emmit of jin from client side (app.js)
+    socket.on('join',(orderId)=>{
+        // socket.join is event menthod and it will create room for our orderId
+        socket.join(orderId)
+    })
+})
+
+
+eventEmitter.on('orderUpadated',(data)=>{
+    io.to(`order_${data.id}`).emit('OrderUpdated',data)
+})
+
+
+eventEmitter.on('orderPlaced',(data)=>{
+    io.to('adminRoom').emit('OrderPlaced',data)
+})

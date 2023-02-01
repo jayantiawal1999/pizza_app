@@ -132,6 +132,19 @@ function initAdmin(){
         }).join('')
 
     }
+    let socket= io()
+
+    socket.on('OrderPlaced',(order)=>{
+        new Noty({
+            type: "success",
+            timeout: 1000,
+            text: "New Order!!",
+            progressBar: false
+          }).show();
+          orders.unshift(order)
+          orderTable.innerHTML=''
+          orderTable.innerHTML=generateMarkup(orders)
+    })
 }
 initAdmin()
 
@@ -149,6 +162,11 @@ console.log(order)
 
 
 function updateStatus(order){
+    statuses.forEach((status)=>{
+        status.classList.remove('step-completed')
+        status.classList.remove('current')
+    })
+
     let stepCompleted= true
     statuses.forEach((status)=>{
         let dataProp = status.dataset.status
@@ -172,3 +190,42 @@ function updateStatus(order){
 
 
 updateStatus(order)
+
+// Socket
+
+// the socket var will be available when imprt socket.io.js in layout js of client file
+let socket= io()
+
+// Join
+if(order_id){
+
+    socket.emit('join',`order_${order._id}`)
+}
+
+// Admin realtime code for not to refresh
+
+let adminAreaPath = window.location.pathname
+console.log(adminAreaPath)
+if(adminAreaPath.includes('admin')){
+    socket.emit('join','adminRoom')
+}
+
+
+//the below is for customer
+
+
+socket.io('OrderUpdated',(data)=>{
+    const updatedOrder = {...order}
+    updatedOrder.updatedAt= moment().format();
+    updatedOrder.status=data.status
+    updateStatus(updatedOrder)
+    new Noty({
+        type: "success",
+        timeout: 1000,
+        text: "Order Updated",
+        progressBar: false
+      }).show();
+    console.log(data)
+})
+
+

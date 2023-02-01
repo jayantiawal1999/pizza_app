@@ -23,9 +23,20 @@ function orderController(){
             })
             // For saving in the database
             order.save().then(result=>{
+
+                Order.populate(result,{path: 'customer'},(err,placedOrder=>{
+
+
                 req.flash('success','Order placed!!')
                 delete req.session.cart;
+                //Emit the socket
+                const eventEmitter= req.app.get('eventemitter')
+                eventEmitter.emit('orderPlaced',placedOrder)
+
                 return res.redirect('/customer/orders')
+                }))
+
+                
             }).catch(err=>{
                 req.flash('error','Something went wrong')
                 console.log(err)
