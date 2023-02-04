@@ -1,20 +1,22 @@
 import axios  from "axios";
 import moment from "moment";
 
-function initAdmin(){
-    let orderTable= document.querySelector('#orderTableBody');
-    let orders=[]
-    let markup;
-
-    axios.get('admin/orders',{
+export function initAdmin() {
+    const orderTableBody = document.querySelector('#orderTableBody')
+    let orders = []
+    let markup
+    console.log('In  initAdmin func')
+    // console.log(orders)
+    axios.get('/admin/orders', {
         headers: {
-            'X-Requested-With': 'XMLHttpRequest'
+            "X-Requested-With": "XMLHttpRequest"
         }
-    }).then(res=>{
-        orders= res.data
-        markup= generateMarkup(orders)
-        orderTable.innerHTML = markup
-    }).catch(err=>{
+    }).then(res => {
+        orders = res.data
+        console.log(orders)
+        markup = generateMarkup(orders)
+        orderTableBody.innerHTML = markup
+    }).catch(err => {
         console.log(err)
     })
 
@@ -27,15 +29,16 @@ function initAdmin(){
         }).join('')
       }
 
-      function generateMarkup(orders){
-        return orders.map(order => {
+    function generateMarkup(orders) {
+        return orders.map((order) => {
+            console.log(order)
             return `
                 <tr>
                 <td class="border px-4 py-2 text-green-900">
                     <p>${ order._id }</p>
                     <div>${ renderItems(order.items) }</div>
                 </td>
-                <td class="border px-4 py-2">${ order.customer.name }</td>
+                <td class="border px-4 py-2">dummy</td>
                 <td class="border px-4 py-2">${ order.address }</td>
                 <td class="border px-4 py-2">
                     <div class="inline-block relative w-64">
@@ -77,8 +80,22 @@ function initAdmin(){
             </tr>
         `
         }).join('')
-
     }
+
+
+    let socket= io()
+
+    socket.on('OrderPlaced',(order)=>{
+        new Noty({
+            type: "success",
+            timeout: 1000,
+            text: "New Order!!",
+            progressBar: false
+          }).show();
+          orders.unshift(order)
+          orderTable.innerHTML=''
+          orderTable.innerHTML=generateMarkup(orders)
+    })
 }
 
 

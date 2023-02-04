@@ -60,7 +60,7 @@ function authController(){
 
         async postRegister(req,res){
             const {name, email, password} = req.body;
-            console.log(req.body)
+            // console.log(req.body)
             //Validate the all fields
             if(!name || !email || !password){
                 req.flash('error','All fields are required!');

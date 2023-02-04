@@ -21,8 +21,8 @@ app.use(flash())
 
 
 //Database connection code
-const url= 'mongodb://localhost/pizza';
-mongoose.connect(url);
+// const url= 'mongodb://localhost/pizza';
+mongoose.connect(process.env.MONGO_CONNECTION_URL);
 
 
  
@@ -90,6 +90,9 @@ app.set('views','./resources/views');
 // })
 
 require('./routes/web')(app)
+app.use((req,res)=>{
+    res.status(404).render('errors/404')
+})
 
 
 //connecting to mongo
@@ -115,7 +118,7 @@ const io= require('socket.io')(server);
 io.on('connection',(socket)=>{
     // Join
     // socket will give diff id for every connection
-    console.log(socket.id)
+    // console.log(socket.id)
     // will receive the emmit of jin from client side (app.js)
     socket.on('join',(orderId)=>{
         // socket.join is event menthod and it will create room for our orderId

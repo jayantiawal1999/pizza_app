@@ -29,7 +29,7 @@ function cartController(){
 
             let cart= request.session.cart
             
-            console.log(request.body)
+            // console.log(request.body)
 
             
             //check if item does not exist in cart
