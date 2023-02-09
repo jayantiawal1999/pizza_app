@@ -15,6 +15,11 @@ function initRoutes(app){
 
     //Auth routes
 
+
+//doing for git to fetch upgit 
+
+
+
     app.get('/login',guest,authController().login)
     app.post('/login',authController().postLogin)
     app.get('/register',guest,authController().register)
